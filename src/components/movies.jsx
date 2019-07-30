@@ -6,20 +6,17 @@ class Movie extends Component {
     movies: getMovies()
   };
 
-  handleDel(elem_id) {
-    console.log(elem_id);
-    console.log("Delete Pressed");
-    const movies = this.state.movies.filter(el => el._id !== elem_id);
-    this.setState({ movies });
+  handleDelete(stateID) {
+    // console.log(stateID);
+    const newMovie = this.state.movies.filter(el => el._id !== stateID);
+    this.setState({ movies: newMovie });
   }
-
   render() {
-    const { length } = this.state.movies;
-    if (length < 1)
-      return <p className="mt-5">There are no movies in the database</p>;
+    if (this.state.movies.length <= 0)
+      return <p>There are no movies in the databases</p>;
     return (
       <React.Fragment>
-        <p className="mt-5">Showing {length} movies in the database</p>
+        <p>Showing {this.state.movies.length} movies in the databases</p>
         <table className="table table-striped">
           <thead>
             <tr>
@@ -27,20 +24,21 @@ class Movie extends Component {
               <th scope="col">Genre</th>
               <th scope="col">Stock</th>
               <th scope="col">Rate</th>
+              <th scope="col" />
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(el => (
-              <tr key={el._id}>
-                <td>{el.title}</td>
-                <td>{el.genre.name}</td>
-                <td>{el.numberInStock}</td>
-                <td>{el.dailyRentalRate}</td>
+            {this.state.movies.map(movie => (
+              <tr key={movie._id}>
+                <td>{movie.title}</td>
+                <td>{movie.genre.name}</td>
+                <td>{movie.numberInStock}</td>
+                <td>{movie.dailyRentalRate}</td>
                 <td>
                   <button
                     className="btn btn-danger"
                     onClick={() => {
-                      this.handleDel(el._id);
+                      this.handleDelete(movie._id);
                     }}
                   >
                     Delete

@@ -6,7 +6,7 @@ class App extends Component {
   state = {};
   render() {
     return (
-      <main className="container">
+      <main className="container mt-3">
         {/* <h1> Hello World</h1> */}
         <Movies />
       </main>
