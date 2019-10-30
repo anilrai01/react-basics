@@ -1,10 +1,14 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
 import Like from "./common-comp/like";
+import Pagination from "./common-comp/pagination";
+import { paginate } from "./utils/paginate";
 
 class Movie extends Component {
   state = {
-    movies: getMovies()
+    movies: getMovies(),
+    currentPage: 1,
+    pageSize: 4
   };
 
   handleDelete(stateID) {
@@ -18,7 +22,10 @@ class Movie extends Component {
     let index = movies.indexOf(movie);
     movies[index].liked = !movies[index].liked;
     this.setState({ movies });
-    console.log(movies[index].liked);
+  };
+
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
   };
 
   componentDidUpdate() {
@@ -26,11 +33,15 @@ class Movie extends Component {
   }
 
   render() {
-    if (this.state.movies.length <= 0)
-      return <p>There are no movies in the databases</p>;
+    const pCount = this.state.movies.length;
+    const { pageSize, currentPage, movies: allMovies } = this.state;
+
+    const movies = paginate(allMovies, currentPage, pageSize);
+
+    if (pCount <= 0) return <p>There are no movies in the databases</p>;
     return (
       <React.Fragment>
-        <p>Showing {this.state.movies.length} movies in the databases</p>
+        <p>Showing {pCount} movies in the databases</p>
         <table className="table table-striped ">
           <thead>
             <tr>
@@ -43,7 +54,7 @@ class Movie extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.movies.map(movie => (
+            {movies.map(movie => (
               <tr key={movie._id}>
                 <td>{movie.title}</td>
                 <td>{movie.genre.name}</td>
@@ -70,6 +81,12 @@ class Movie extends Component {
             ))}
           </tbody>
         </table>
+        <Pagination
+          itemsCount={pCount}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
       </React.Fragment>
     );
   }
