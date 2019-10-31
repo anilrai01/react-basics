@@ -36,26 +36,37 @@ class Movie extends Component {
   }
 
   handleGenreSelect = genre => {
-    console.log(genre);
+    this.setState({ selectedGenre: genre });
   };
 
   render() {
-    const pCount = this.state.movies.length;
-    const { pageSize, currentPage, movies: allMovies } = this.state;
+    // const pCount = this.state.movies.length;
+    const {
+      pageSize,
+      currentPage,
+      selectedGenre,
+      movies: allMovies
+    } = this.state;
 
-    const movies = paginate(allMovies, currentPage, pageSize);
+    const filteredMovie = selectedGenre
+      ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+      : allMovies;
 
-    if (pCount <= 0) return <p>There are no movies in the databases</p>;
+    const movies = paginate(filteredMovie, currentPage, pageSize);
+
+    if (filteredMovie.length <= 0)
+      return <p>There are no movies in the databases</p>;
     return (
       <div className="row">
         <div className="col-2">
           <ListGroup
             items={this.state.genre}
-            onGenreSelect={this.handleGenreSelect}
+            selectedItem={this.state.selectedGenre}
+            onItemSelect={this.handleGenreSelect}
           />
         </div>
         <div className="col">
-          <p>Showing {pCount} movies in the databases</p>
+          <p>Showing {filteredMovie.length} movies in the databases</p>
           <table className="table table-striped ">
             <thead>
               <tr>
@@ -96,7 +107,7 @@ class Movie extends Component {
             </tbody>
           </table>
           <Pagination
-            itemsCount={pCount}
+            itemsCount={filteredMovie.length}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange}
