@@ -8,11 +8,16 @@ import { getGenres } from "../services/fakeGenreService";
 
 class Movie extends Component {
   state = {
-    movies: getMovies(),
-    genre: getGenres(),
+    movies: [],
+    genre: [],
     currentPage: 1,
     pageSize: 4
   };
+
+  componentDidMount() {
+    const genres = [{ name: "All Genres", _id: 0 }, ...getGenres()];
+    this.setState({ movies: getMovies(), genre: genres });
+  }
 
   handleDelete(stateID) {
     // console.log(stateID);
@@ -31,12 +36,8 @@ class Movie extends Component {
     this.setState({ currentPage: page });
   };
 
-  componentDidUpdate() {
-    //console.log(this.state.movies);
-  }
-
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre });
+    this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
   render() {
@@ -48,9 +49,10 @@ class Movie extends Component {
       movies: allMovies
     } = this.state;
 
-    const filteredMovie = selectedGenre
-      ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-      : allMovies;
+    const filteredMovie =
+      selectedGenre && selectedGenre._id
+        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+        : allMovies;
 
     const movies = paginate(filteredMovie, currentPage, pageSize);
 
