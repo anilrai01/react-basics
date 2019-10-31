@@ -18,6 +18,9 @@ const ListGroup = props => {
           className={
             item === selectedItem ? "list-group-item active" : "list-group-item"
           }
+          style={{
+            cursor: "pointer"
+          }}
         >
           {item[textProperty]}
         </li>
