@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import "./App.css";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Movies from "./components/movies";
 import Rentals from "./components/rentals";
 import NotFound from "./components/notFound";
 import MoviesDetails from "./components/moviesDetails";
 import NavBar from "./components/nabvar";
-import { Route, Switch, Redirect } from "react-router-dom";
 import Customers from "./components/customers";
+import "./App.css";
 
 class App extends Component {
   state = {};
@@ -21,10 +21,10 @@ class App extends Component {
           <Switch>
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
-            <Route path="/" exact component={Movies} />
-            <Route path="/not-found" component={NotFound} />
             <Route path="/moviesDetails/:id" component={MoviesDetails}></Route>
-
+            <Route path="/not-found" component={NotFound} />
+            <Route path="/movies" component={Movies}></Route>
+            <Redirect from="/" exact to="/movies"></Redirect>
             <Redirect to="/not-found"></Redirect>
           </Switch>
         </main>
