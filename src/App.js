@@ -6,6 +6,7 @@ import NotFound from "./components/notFound";
 import MoviesDetails from "./components/moviesDetails";
 import NavBar from "./components/nabvar";
 import Customers from "./components/customers";
+import LogInForm from "./components/loginForm";
 import "./App.css";
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
           {/* <h1> Hello World</h1> */}
           {/* <Movies /> */}
           <Switch>
+            <Route path="/login" component={LogInForm} />
             <Route path="/customers" component={Customers} />
             <Route path="/rentals" component={Rentals} />
             <Route path="/moviesDetails/:id" component={MoviesDetails}></Route>
