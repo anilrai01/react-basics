@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React from "react";
 import Joi from "joi-browser";
 import Input from "./common-comp/input";
+import Form from "./common-comp/form";
 
-class LogInForm extends Component {
+class LogInForm extends Form {
   state = {
     data: { username: "", password: "" },
     errors: {}
