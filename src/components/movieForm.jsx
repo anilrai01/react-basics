@@ -70,18 +70,22 @@ class MovieForm extends Form {
 
   afterSubmit = () => {
     // if(this)
+    saveMovie(this.state.data);
+    this.props.history.push("/movies");
     console.log("Edited");
   };
 
   render() {
     // const { id } = this.props.match.params;
     // console.log("Inside Render",this.state.movieID)
+    console.log(this.state.data);
+    console.log(this.state.genres);
     return (
       <div>
         <h1>Movie Form</h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title", "text")}
-          {this.renderInput("genre", "Genre", "text")}
+          {this.renderSelect("genreId", "Genre", this.state.genres)}
           {this.renderInput("number", "Number In Stock", "number")}
           {this.renderInput("rate", "Rate", "number")}
           {this.renderButton("Save")}
