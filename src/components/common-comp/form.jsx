@@ -45,6 +45,7 @@ class Form extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
+    // console.log(this.state.data);
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.id] = errorMessage;
