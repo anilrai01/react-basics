@@ -7,6 +7,7 @@ import { getGenres } from "../services/fakeGenreService";
 import MovieTable from "./moviesTable";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+import SearchBar from "./searchBar";
 
 class Movie extends Component {
   state = {
@@ -14,7 +15,9 @@ class Movie extends Component {
     genre: [],
     currentPage: 1,
     pageSize: 4,
-    sortColumn: { path: "title", order: "asc" }
+    sortColumn: { path: "title", order: "asc" },
+    searchQuery: "",
+    selectedGenre: null
   };
 
   componentDidMount() {
@@ -44,11 +47,15 @@ class Movie extends Component {
   };
 
   handleGenreSelect = genre => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
 
   handleSort = sortColumn => {
     this.setState({ sortColumn });
+  };
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
   getPagedData = () => {
@@ -56,14 +63,18 @@ class Movie extends Component {
       pageSize,
       currentPage,
       selectedGenre,
+      searchQuery,
       movies: allMovies,
       sortColumn
     } = this.state;
 
-    const filteredMovie =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filteredMovie = allMovies;
+    if (searchQuery)
+      filteredMovie = allMovies.filter(m =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filteredMovie = allMovies.filter(m => m.genre._id === selectedGenre._id);
 
     const sorted = _.orderBy(
       filteredMovie,
@@ -78,7 +89,7 @@ class Movie extends Component {
 
   render() {
     // const pCount = this.state.movies.length;
-    const { pageSize, currentPage } = this.state;
+    const { pageSize, currentPage, searchQuery } = this.state;
     const { totalCount, data: movies } = this.getPagedData();
 
     if (totalCount <= 0) return <p>There are no movies in the databases</p>;
@@ -97,6 +108,7 @@ class Movie extends Component {
               <button className="btn btn-primary mb-3 mt-2">New Movie</button>
             </Link>
             <p>Showing {totalCount} movies in the databases</p>
+            <SearchBar value={searchQuery} onChange={this.handleSearch} />
             <MovieTable
               movies={movies}
               onLike={this.handleLike}
